@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  learn-dash-app:
+    image: node:latest
+    container_name: aspire-learn-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: npm run dev
+    networks:
+      - lms-network
+
+networks:
+  lms-network:
+    driver: bridge
