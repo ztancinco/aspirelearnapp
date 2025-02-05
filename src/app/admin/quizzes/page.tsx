@@ -23,7 +23,7 @@ export default function Courses() {;
       <DashLearnLayout>
         <div className="max-w-8xl mx-auto px-2">
           <HeaderList 
-            title="Manage Courses" 
+            title="Manage Quizzes" 
             description="View, edit, and manage all the courses in the LMS."
           />
           <QuizzesList courses={courses} />

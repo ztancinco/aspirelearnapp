@@ -6,7 +6,7 @@ import CourseForm from '@/app/components/form/course/CourseForm';
 import useCourses from '@/app/hooks/useCourses';
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Course } from '@/app/api/interface/course';
+import { Course } from '@/app/api/interface/Course';
 
 export default function EdidtQuizPage() {
   const params = useParams();

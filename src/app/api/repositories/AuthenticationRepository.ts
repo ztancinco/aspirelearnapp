@@ -1,5 +1,5 @@
 import Repository from '@/app/api/repositories/Repository';
-import { User } from '@/app/api/interface/user';
+import { User } from '@/app/api/interface/User';
 
 export interface AuthData {
   access_token: string;
@@ -28,7 +28,7 @@ export default class AuthenticationRepository extends Repository {
    * Sends a logout request.
    * @returns A promise that resolves when logout is successful.
    */
-  public static async authLogout(): Promise<void> {
-    await this.resource.post(`${this.prefix}/logout/`, {});
+  public static async authLogout(refreshToken: string): Promise<void> {
+    await this.resource.post(`${this.prefix}/logout/`, { refresh_token: refreshToken});
   }
 }

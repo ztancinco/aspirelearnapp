@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
-import axios from '@/lib/axiosConfig';
-import { User } from '@/app/api/interface/user';
+import { useState, useCallback, useMemo } from 'react';
+import UserRepository from '@/app/api/repositories/UserRepository';
+import { User } from '@/app/api/interface/User';
 
 export default function useUsers() {
   const [users, setUsers] = useState<User[]>([]);
@@ -25,7 +25,7 @@ export default function useUsers() {
   const fetchUsers = useCallback(async () => {
     setLoadingState(true);
     try {
-      const { data } = await axios.get<User[]>('/users/');
+      const data = await UserRepository.getUsers();
       setUsers(data);
     } catch (err: unknown) {
       handleError('Failed to fetch users', err);
@@ -34,18 +34,14 @@ export default function useUsers() {
     }
   }, []);
 
-  // Fetch a single user by ID (optimized to check cache)
+  // Fetch a single user by ID
   const fetchUser = useCallback(
     async (id: number): Promise<User | null> => {
       const cachedUser = users.find((user) => user.id === id);
-      if (cachedUser) return cachedUser; // Return cached user if available
-
+      if (cachedUser) return cachedUser;
       setLoadingState(true);
       try {
-        const { data } = await axios.get<User[]>(`/users/`, {
-          params: { user_id: id },
-        });
-        return data.length > 0 ? data[0] : null;
+        return await UserRepository.getUser(id);
       } catch (err: unknown) {
         handleError('Failed to fetch user', err);
         return null;
@@ -56,11 +52,17 @@ export default function useUsers() {
     [users]
   );
 
+  const getUsers = useMemo(() => users, [users]);
+  const getUser = useMemo(
+    () => (id: number): User | null => users.find((user) => user.id === id) || null,
+    [users]
+  );
+
   // Add a new user
-  const addUser = async (userData: User) => {
+  const addUser = async (userData: Omit<User, 'id'>) => {
     setError(null);
     try {
-      const { data: newUser } = await axios.post<User>('/users/', userData);
+      const newUser = await UserRepository.createUser(userData);
       setUsers((prevUsers) => [...prevUsers, newUser]);
     } catch (err: unknown) {
       handleError('Failed to add user', err);
@@ -71,13 +73,9 @@ export default function useUsers() {
   const updateUser = async (id: number, updatedUserData: Partial<User>) => {
     setError(null);
     try {
-      const { data: updatedUser } = await axios.put<User>(`/users/`, updatedUserData, {
-        params: { user_id: id },
-      });
+      const updatedUser = await UserRepository.updateUser(id, updatedUserData);
       setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === id ? { ...user, ...updatedUser } : user
-        )
+        prevUsers.map((user) => (user.id === id ? { ...user, ...updatedUser } : user))
       );
     } catch (err: unknown) {
       handleError('Failed to update user', err);
@@ -88,9 +86,7 @@ export default function useUsers() {
   const deleteUser = async (id: number) => {
     setError(null);
     try {
-      await axios.delete(`/users`, {
-        params: { user_id: id },
-      });
+      await UserRepository.deleteUser(id);
       await fetchUsers(); // Refresh the user list after deletion
     } catch (err: unknown) {
       handleError('Failed to delete user', err);
@@ -98,11 +94,12 @@ export default function useUsers() {
   };
 
   return {
-    users,
+    users: getUsers,
     loading,
     error,
     fetchUsers,
     fetchUser,
+    getUser,
     addUser,
     updateUser,
     deleteUser,

@@ -1,4 +1,4 @@
-import { User } from '@/app/api/interface/user';
+import { User } from '@/app/api/interface/User';
 import { useRouter } from 'next/navigation';
 
 interface UserListRowProps {
@@ -37,6 +37,9 @@ export default function UserListRow({ user, onDelete }: UserListRowProps) {
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-gray-700">{user.email}</div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <div className="text-sm text-gray-700">{user.role}</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span

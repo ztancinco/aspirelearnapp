@@ -1,5 +1,5 @@
 
-import { Quiz } from '@/app/api/interface/quiz';
+import { Quiz } from '@/app/api/interface/Quiz';
 import { Control } from 'react-hook-form';
 import { CourseFormData } from './course_form_data';
 

@@ -1,5 +1,5 @@
 import Repository from '@/app/api/repositories/Repository';
-import { Course } from '@/app/api/interface/course';
+import { Course } from '@/app/api/interface/Course';
 
 export default class CourseRepository extends Repository {
   private static readonly prefix = '/courses';

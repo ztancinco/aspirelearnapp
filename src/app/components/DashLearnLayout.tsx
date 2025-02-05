@@ -1,29 +1,35 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Sidebar from '@/app/components/sidebar/SideBar';
 import AdminSidebar from '@/app/components/sidebar/AdminSideBar';
-import useAuth  from '@/app/hooks/useAuth';
+import Loader from './Loader';
+import useAuth from '@/app/hooks/useAuth';
 
 export default function DashLearnLayout({ children }: { children: React.ReactNode }) {
   const { getUserData } = useAuth();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (getUserData) {
-      try {
-        setIsAdmin(getUserData.roles?.includes('Admin'));
-      } catch (error) {
-        console.error("Error parsing userData:", error);
-      }
+  const isAdmin = useMemo(() => {
+    try {
+      return getUserData?.roles?.includes('Admin') ?? false;
+    } catch (error) {
+      console.error('Error parsing userData:', error);
+      return false;
     }
   }, [getUserData]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [getUserData]);
+
+  if (loading) return  <Loader/>;
 
   return (
     <main className="flex flex-1">
       {/* Sidebar */}
       <aside className="w-20 md:w-64 h-full">
-        {isAdmin ? <AdminSidebar /> : <Sidebar />}
+        {isAdmin ? <AdminSidebar key="admin-sidebar" /> : <Sidebar key="user-sidebar" />}
       </aside>
       {/* Main Content */}
       <section className="flex-1 p-4 overflow-auto">

@@ -1,6 +1,6 @@
 'use client';
 
-import { Course } from '@/app/api/interface/course';
+import { Course } from '@/app/api/interface/Course';
 import { useRouter } from 'next/navigation';
 
 interface CourseProps {

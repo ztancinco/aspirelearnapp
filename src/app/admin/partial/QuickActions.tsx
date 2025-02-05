@@ -24,7 +24,7 @@ export default function QuickActions() {
       label: 'Manage Users', 
       icon: <UserGroupIcon className="h-5 w-5 mr-2" />, 
       color: 'yellow', 
-      onClick: () => router.push('/users') 
+      onClick: () => router.push('admin/users') 
     },
   ];
 

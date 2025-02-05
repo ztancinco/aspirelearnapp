@@ -1,6 +1,6 @@
-import { CourseBase } from "./course_base";
+import { CourseBase } from "./CourseBase";
 import { Lesson } from "./Lesson";
-import { Quiz } from "./quiz";
+import { Quiz } from "./Quiz";
 
 export interface Course extends CourseBase {
   quizzes?: Quiz[];

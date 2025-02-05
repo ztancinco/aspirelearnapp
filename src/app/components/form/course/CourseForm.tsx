@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo } from 'react';
 import InputField from '@/app/components/input/InputField';
-import InputSearchField from '@/app/components/input/InputSearchField';
 import LessonSection from '@/app/components/form/course/LessonSection';
 import QuizSection from '@/app/components/form/course/QuizSection';
-import { Course } from '@/app/api/interface/course';
+import { Course } from '@/app/api/interface/Course';
 import { CourseFormData } from '@/app/components/form/course/interface/course_form_data';
 import useCourses from '@/app/hooks/useCourses';
 import useCourseFormHandlers from '@/app/hooks/useCourseFormHandlers';
 import { useForm, Controller, FormProvider, useFormContext } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import CustomDropdown from '@/app/components/form/fields/CustomDropDown';
 
 interface CourseFormProps {
   course?: Course;
@@ -32,6 +32,13 @@ const CourseFormContent: React.FC<CourseFormProps> = ({ course }) => {
     trigger,
   } = useCourseFormHandlers();
 
+  const instructors = [
+    { id: 1, label: 'John Doe' },
+    { id: 2, label: 'Jane Smith' },
+    { id: 3, label: 'Robert Johnson' },
+    { id: 4, label: 'Alice Brown' },
+  ];
+
   const handleFormSubmit = async (data: CourseFormData) => {
     const isValid = await trigger();
     if (!isValid) return;
@@ -42,10 +49,12 @@ const CourseFormContent: React.FC<CourseFormProps> = ({ course }) => {
       } else {
         await addCourse(data);
       }
-      router.push('/courses');
     } catch (err) {
       console.error(err);
+      return;
     }
+
+    router.push('/admin/courses');
   };
 
   return (
@@ -73,15 +82,16 @@ const CourseFormContent: React.FC<CourseFormProps> = ({ course }) => {
           />
           {errors.description && <p className="text-red-600">{errors.description.message}</p>}
 
+          {/* Custom Dropdown for Instructor Selection */}
           <Controller
             name="instructor"
             control={control}
             rules={{ required: 'Instructor is required' }}
             render={({ field }) => (
-              <InputSearchField
-                placeHolder='Instructor'
-                suggestions={['John Doe', 'Jane Smith', 'Robert Johnson']}
-                onSelect={(value) => field.onChange(value)}
+              <CustomDropdown
+                options={instructors}
+                placeholder="Select Instructor"
+                onSelect={(selectedId) => field.onChange(selectedId)}
               />
             )}
           />

@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { Quiz } from '@/app/api/interface/quiz';
+import { Quiz } from '@/app/api/interface/Quiz';
 import { Lesson } from '../api/interface/Lesson';
 
 const useCourseFormHandlers = () => {

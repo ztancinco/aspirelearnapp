@@ -15,7 +15,6 @@ axiosInstance.interceptors.request.use(
 
     if (!isLoginOrLogout) {
       const authData = Cookies.get('authData');
-      console.log('auth data:', authData);
       if (authData) {
         const { access_token } = JSON.parse(authData);
         if (access_token) {

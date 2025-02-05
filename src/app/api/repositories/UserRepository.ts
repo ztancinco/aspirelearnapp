@@ -1,5 +1,5 @@
 import Repository from '@/app/api/repositories/Repository';
-import { User } from '@/app/api/interface/user';
+import { User } from '@/app/api/interface/User';
 
 export default class UserRepository extends Repository {
   private static readonly prefix = '/users';

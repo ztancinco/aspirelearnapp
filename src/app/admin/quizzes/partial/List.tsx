@@ -1,4 +1,4 @@
-import { Course } from '@/app/api/interface/course';
+import { Course } from '@/app/api/interface/Course';
 import CoursesListRow from './ListRow';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
@@ -17,7 +17,7 @@ export default function List({ courses = [] }: CourseListProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-teal-800">Quizzes</h2>
         <button
-          onClick={() => router.push('/courses/create')}
+          onClick={() => router.push('/admin/quizzes/create')}
           className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition focus:outline-none focus:ring-4 focus:ring-blue-500"
         >
           <PlusCircleIcon className="h-5 w-5" />

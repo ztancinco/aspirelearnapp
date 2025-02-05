@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import CourseRepository from '@/app/api/repositories/CourseRepository';
-import { Course } from '@/app/api/interface/course';
+import { Course } from '@/app/api/interface/Course';
 
 export default function useCourses() {
   const [courses, setCourses] = useState<Course[]>([]);

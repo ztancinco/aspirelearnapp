@@ -63,20 +63,28 @@ const LoginForm: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Email Field */}
           <Controller
-            name="email"
-            control={control}
-            rules={{ required: 'Email is required' }}
-            render={({ field }) => (
-              <InputField
-                label="Email"
-                {...field}
-                error={errors.email?.message}
-                placeHolder="Enter your email"
-                icon={<UserIcon className="h-5 w-5 text-teal-500" />}
-              />
-            )}
-          />
-
+              name="email"
+              control={control}
+              rules={{
+                required: 'Email is required',
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                  message: 'Enter a valid email address',
+                },
+              }}
+              render={({ field }) => (
+                <InputField
+                  label="Email"
+                  type="email"
+                  {...field}
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value.trim().toLowerCase())} // Ensure valid input
+                  error={errors.email?.message}
+                  placeHolder="Enter your email"
+                  icon={<UserIcon className="h-5 w-5 text-teal-500" />}
+                />
+              )}
+            />
           {/* Password Field */}
           <Controller
             name="password"

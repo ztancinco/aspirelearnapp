@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import Cookies from 'js-cookie';
 import AuthenticationRepository from '@/app/api/repositories/AuthenticationRepository';
 import { AuthData, AuthLoginPostData } from '@/app/api/repositories/AuthenticationRepository';
-import { User } from '@/app/api/interface/user';
+import { User } from '@/app/api/interface/User';
 
 export default function useAuth() {
   const [authData, setAuthData] = useState<AuthData | null>(() => {
@@ -11,7 +11,7 @@ export default function useAuth() {
   });
 
   const [user, setUser] = useState<User | null>(() => {
-    const savedUser = Cookies.get('user');
+    const savedUser = Cookies.get('userData');
     return savedUser && savedUser !== 'undefined' ? JSON.parse(savedUser) : null;
   });
 
@@ -31,32 +31,31 @@ export default function useAuth() {
       const { access_token, refresh_token, user } = data;
       const authData = JSON.stringify({ access_token, refresh_token });
       const userData = JSON.stringify(user);
-      
+
       Cookies.set('authData', authData, { expires: 7 });
-      Cookies.set('user', userData, { expires: 7 });
+      Cookies.set('userData', userData, { expires: 7 });
 
       setAuthData({ access_token, refresh_token, user });
       setUser(user);
 
       return { access_token, refresh_token, user };
     } catch (error) {
-      console.error('Login failed:', error);
       throw error;
     }
   };
 
-  const logout = async () => {
+  const logout = async (refreshToken: string) => {
     try {
-      await AuthenticationRepository.authLogout();
+      if (!refreshToken) throw Error('No refresh token');
+      await AuthenticationRepository.authLogout(refreshToken);
+      Cookies.remove('authData');
+      Cookies.remove('userData');
+
+      setAuthData(null);
+      setUser(null);
     } catch (error) {
       console.error('Logout failed:', error);
     }
-
-    Cookies.remove('authData');
-    Cookies.remove('user');
-
-    setAuthData(null);
-    setUser(null);
   };
 
   return {
