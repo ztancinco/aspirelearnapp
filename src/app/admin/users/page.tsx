@@ -1,15 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import DashLearnLayout from '../components/DashLearnLayout';
-import HeaderList from '../components/HeaderList';
+import DashLearnLayout from '../../components/DashLearnLayout';
+import HeaderList from '../../components/HeaderList';
 import List from './partial/List';
-import Loader from '../components/Loader';
-import useUsers from '../hooks/useUsers';
-import useAuthGuard from '../hooks/useAuthGuard';
+import Loader from '../../components/Loader';
+import useUsers from '../../hooks/useUsers';
 
 export default function ManageUsers() {
-  useAuthGuard();
   const { users, loading, error, fetchUsers } = useUsers();
 
   useEffect(() => {

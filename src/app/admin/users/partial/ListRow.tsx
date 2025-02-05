@@ -17,7 +17,12 @@ export default function UserListRow({ user, onDelete }: UserListRowProps) {
     const fullName = `${user.first_name} ${user.last_name}`;
     if (confirm(`Are you sure you want to delete this user "${fullName}"?`)) {
       try {
-        await onDelete(user.id);
+        if (user.id !== undefined) {
+          await onDelete(user.id);
+        } else {
+          console.error('User ID is undefined');
+          alert('Failed to delete user. User ID is undefined.');
+        }
       } catch (err) {
         console.error('Failed to delete user:', err);
         alert('Failed to delete user. Please try again.');

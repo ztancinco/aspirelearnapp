@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import InputField from '@/app/components/input/InputField';
+import InputSearchField from '@/app/components/input/InputSearchField';
 import LessonSection from '@/app/components/form/course/LessonSection';
 import QuizSection from '@/app/components/form/course/QuizSection';
-import SelectField from '@/app/components/input/SelectField';
 import { Course } from '@/app/api/interface/course';
 import { CourseFormData } from '@/app/components/form/course/interface/course_form_data';
 import useCourses from '@/app/hooks/useCourses';
@@ -19,17 +19,17 @@ const CourseFormContent: React.FC<CourseFormProps> = ({ course }) => {
   const router = useRouter();
   const { error, addCourse, updateCourse } = useCourses();
   const { control, handleSubmit, formState: { errors }, watch } = useFormContext<CourseFormData>();
-  const { 
-    handleLessonChange, 
-    handleAddLesson, 
-    handleDeleteLesson, 
-    handleQuizChange, 
-    handleQuestionChange, 
-    handleAddQuiz, 
-    handleDeleteQuiz, 
-    handleAddQuestion, 
+  const {
+    handleLessonChange,
+    handleAddLesson,
+    handleDeleteLesson,
+    handleQuizChange,
+    handleQuestionChange,
+    handleAddQuiz,
+    handleDeleteQuiz,
+    handleAddQuestion,
     handleDeleteQuestion,
-    trigger 
+    trigger,
   } = useCourseFormHandlers();
 
   const handleFormSubmit = async (data: CourseFormData) => {
@@ -48,7 +48,6 @@ const CourseFormContent: React.FC<CourseFormProps> = ({ course }) => {
     }
   };
 
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-7xl w-full p-8 bg-white shadow-xl rounded-lg">
@@ -64,24 +63,28 @@ const CourseFormContent: React.FC<CourseFormProps> = ({ course }) => {
             rules={{ required: 'Title is required' }}
             render={({ field }) => <InputField {...field} placeHolder="Title" />}
           />
-          
           {errors.title && <p className="text-red-600">{errors.title.message}</p>}
+
           <Controller
             name="description"
             control={control}
             rules={{ required: 'Description is required' }}
             render={({ field }) => <InputField {...field} placeHolder="Description" />}
           />
-
-           {errors.description && <p className="text-red-600">{errors.description.message}</p>}
+          {errors.description && <p className="text-red-600">{errors.description.message}</p>}
 
           <Controller
             name="instructor"
             control={control}
             rules={{ required: 'Instructor is required' }}
-            render={({ field }) => <SelectField {...field} placeholder="Select Instructor" options={['John Doe', 'Jane Smith', 'Robert Johnson']} />}
+            render={({ field }) => (
+              <InputSearchField
+                placeHolder='Instructor'
+                suggestions={['John Doe', 'Jane Smith', 'Robert Johnson']}
+                onSelect={(value) => field.onChange(value)}
+              />
+            )}
           />
-          
           {errors.instructor && <p className="text-red-600">{errors.instructor.message}</p>}
 
           <LessonSection

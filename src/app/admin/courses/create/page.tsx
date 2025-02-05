@@ -1,7 +1,7 @@
 'use client';
 
 import CourseForm from '@/app/components/form/course/CourseForm';
-import useCourses from '../../hooks/useCourses';
+import useCourses from '@/app/hooks/useCourses';
 import DashLearnLayout from '@/app/components/DashLearnLayout';
 import { useRouter } from 'next/navigation';
 

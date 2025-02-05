@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import axios from '@/lib/axiosConfig';
-import { Course } from '../api/interface/course';
+import CourseRepository from '@/app/api/repositories/CourseRepository';
+import { Course } from '@/app/api/interface/course';
 
 export default function useCourses() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -8,39 +8,34 @@ export default function useCourses() {
   const [error, setError] = useState<string | null>(null);
 
   // Helper to handle errors
-  const handleError = (errorMessage: string, error: unknown) => {
-    const errorDetail = axios.isAxiosError(error)
-      ? error.response?.data?.message || error.message
-      : 'An unexpected error occurred';
-    setError(`${errorMessage}: ${errorDetail}`);
+  const handleError = (message: string, error: unknown) => {
+    setError(message);
+    console.error(message, error);
   };
 
   // Fetch all courses
   const fetchCourses = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
-      const { data } = await axios.get<Course[]>('/courses');
+      const data = await CourseRepository.getCourses();
       setCourses(data);
-    } catch (err: unknown) {
+    } catch (err) {
       handleError('Failed to fetch courses', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Fetch a single course by ID (checks cache first)
+  // Fetch a single course by ID
   const fetchCourse = useCallback(
     async (id: number): Promise<Course | null> => {
       const cachedCourse = courses.find((course) => course.id === id);
       if (cachedCourse) return cachedCourse;
 
       setLoading(true);
-      setError(null);
       try {
-        const { data } = await axios.get<Course>(`/courses/${id}`);
-        return data;
-      } catch (err: unknown) {
+        return await CourseRepository.getCourse(id);
+      } catch (err) {
         handleError('Failed to fetch course', err);
         return null;
       } finally {
@@ -51,48 +46,56 @@ export default function useCourses() {
   );
 
   // Add a new course
-  const addCourse = async (courseData: Omit<Course, 'id'>) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const { data: newCourse } = await axios.post<Course>('/courses', courseData);
-      setCourses((prevCourses) => [...prevCourses, newCourse]);
-    } catch (err: unknown) {
-      handleError('Failed to add course', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const addCourse = useCallback(
+    async (courseData: Omit<Course, 'id'>) => {
+      setLoading(true);
+      try {
+        const newCourse = await CourseRepository.createCourse(courseData);
+        setCourses((prevCourses) => [...prevCourses, newCourse]);
+      } catch (err) {
+        handleError('Failed to add course', err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   // Update an existing course
-  const updateCourse = async (id: number, updatedCourseData: Partial<Course>) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const { data: updatedCourse } = await axios.put<Course>(`/courses/${id}`, updatedCourseData);
-      setCourses((prevCourses) =>
-        prevCourses.map((course) => (course.id === id ? { ...course, ...updatedCourse } : course))
-      );
-    } catch (err: unknown) {
-      handleError('Failed to update course', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const updateCourse = useCallback(
+    async (id: number, updatedCourseData: Partial<Course>) => {
+      setLoading(true);
+      try {
+        const existingCourse = courses.find((course) => course.id === id);
+        if (!existingCourse) throw new Error('Course not found');
+        const updatedCourse = await CourseRepository.updateCourse(id, { ...existingCourse, ...updatedCourseData });
+        setCourses((prevCourses) =>
+          prevCourses.map((course) => (course.id === id ? { ...course, ...updatedCourse } : course))
+        );
+      } catch (err) {
+        handleError('Failed to update course', err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [courses]
+  );
 
   // Delete a course
-  const deleteCourse = async (id: number) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await axios.delete(`/courses/${id}`);
-      setCourses((prevCourses) => prevCourses.filter((course) => course.id !== id));
-    } catch (err: unknown) {
-      handleError('Failed to delete course', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const deleteCourse = useCallback(
+    async (id: number) => {
+      setLoading(true);
+      try {
+        await CourseRepository.deleteCourse(id);
+        setCourses((prevCourses) => prevCourses.filter((course) => course.id !== id));
+      } catch (err) {
+        handleError('Failed to delete course', err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setCourses]
+  );
 
   return {
     courses,

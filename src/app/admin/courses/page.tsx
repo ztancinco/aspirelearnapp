@@ -1,15 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import Loader from '../components/Loader';
-import HeaderList from '../components/HeaderList';
+import Loader from '../../components/Loader';
+import HeaderList from '../../components/HeaderList';
 import QuizzesList from './partial/List';
-import useCourses from '../hooks/useCourses';
-import DashLearnLayout from '../components/DashLearnLayout';
-import useAuthGuard from '../hooks/useAuthGuard';
+import useCourses from '../../hooks/useCourses';
+import DashLearnLayout from '../../components/DashLearnLayout';
 
 export default function Courses() {
-  useAuthGuard();
   const { courses, loading, fetchCourses } = useCourses();
 
   useEffect(() => {

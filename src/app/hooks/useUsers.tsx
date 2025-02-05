@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import axios from '@/lib/axiosConfig';
-import { User } from '../api/interface/user';
+import { User } from '@/app/api/interface/user';
 
 export default function useUsers() {
   const [users, setUsers] = useState<User[]>([]);

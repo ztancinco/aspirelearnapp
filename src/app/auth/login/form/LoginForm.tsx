@@ -6,14 +6,24 @@ import { useForm, Controller } from 'react-hook-form';
 import { UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import InputField from '@/app/components/input/InputField';
 import Link from 'next/link';
+import useAuth from '@/app/hooks/useAuth';
 
 interface LoginFormData {
   email: string;
   password: string;
 }
 
+interface LoginErrorResponse {
+  response?: {
+    data: {
+      error: string;
+    };
+  };
+}
+
 const LoginForm: React.FC = () => {
   const router = useRouter();
+  const { login } = useAuth();
 
   const {
     control,
@@ -31,25 +41,14 @@ const LoginForm: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
+    setError(null);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        router.push('/');
-      } else {
-        setError(responseData.error || 'An error occurred');
-      }
-    } catch {
-      setError('An error occurred while logging in');
+      await login(data.email, data.password);
+      router.push('/');
+    } catch (err: unknown) {
+      const typedError = err as LoginErrorResponse;
+      setError(typedError.response?.data?.error || 'An error occurred while logging in');
     } finally {
       setIsSubmitting(false);
     }
@@ -69,7 +68,7 @@ const LoginForm: React.FC = () => {
             rules={{ required: 'Email is required' }}
             render={({ field }) => (
               <InputField
-                label="email"
+                label="Email"
                 {...field}
                 error={errors.email?.message}
                 placeHolder="Enter your email"

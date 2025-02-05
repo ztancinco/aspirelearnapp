@@ -12,13 +12,13 @@ export default function QuickActions() {
       label: 'Add New Course', 
       icon: <PlusCircleIcon className="h-5 w-5 mr-2" />, 
       color: 'blue', 
-      onClick: () => router.push('/courses/create') 
+      onClick: () => router.push('/admin/courses/create') 
     },
     { 
       label: 'View Courses', 
       icon: <BookOpenIcon className="h-5 w-5 mr-2" />, 
       color: 'green', 
-      onClick: () => router.push('/courses') 
+      onClick: () => router.push('/admin/courses') 
     },
     { 
       label: 'Manage Users', 

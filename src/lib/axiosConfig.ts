@@ -1,37 +1,44 @@
 import axios from 'axios';
-import NProgress from 'nprogress';
-import qs from 'qs';
+import Cookies from 'js-cookie';
+import { AxiosError } from 'axios';
 
-const baseURL = `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_API_VERSION}`;
-axios.defaults.baseURL = baseURL;
-axios.defaults.headers.common.Accept = 'application/json';
-axios.defaults.paramsSerializer = (params) => qs.stringify(params);
+// Create an Axios instance
+const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
 
-// Request interceptor to handle progress bar
-axios.interceptors.request.use(
+// Request Interceptor to add the Bearer token
+axiosInstance.interceptors.request.use(
   (config) => {
-    if (config.headers?.progress !== false) {
-      NProgress.start();
+    // Skip adding the Bearer token for login or logout routes
+    const isLoginOrLogout = config.url?.includes('/auth/login') || config.url?.includes('/auth/logout');
+
+    if (!isLoginOrLogout) {
+      const authData = Cookies.get('authData');
+      console.log('auth data:', authData);
+      if (authData) {
+        const { access_token } = JSON.parse(authData);
+        if (access_token) {
+          config.headers['Authorization'] = `Bearer ${access_token}`;
+        }
+      }
     }
-    console.log('Request URL:', config.url);
+
     return config;
   },
+  (error) => Promise.reject(error)
+);
+
+// Response Interceptor to handle token expiration
+axiosInstance.interceptors.response.use(
+  (response) => response,
   (error) => {
-    NProgress.done();
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      console.log('Unauthorized, please login again');
+    }
     return Promise.reject(error);
   }
 );
 
-// Response interceptor to handle progress bar and response
-axios.interceptors.response.use(
-  (response) => {
-    NProgress.done();
-    return response;
-  },
-  (error) => {
-    NProgress.done();
-    return Promise.reject(error);
-  }
-);
-
-export default axios;
+export default axiosInstance;
+export { AxiosError };

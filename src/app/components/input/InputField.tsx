@@ -47,7 +47,7 @@ const InputField: React.FC<InputFieldProps> = ({
             icon ? "pl-10" : "pl-4"
           } pr-4 py-2 border ${
             error ? "border-red-500" : "border-gray-300"
-          } rounded-md shadow-sm focus:outline-none focus:ring-blue-300 focus:border-blue-500`}
+          } rounded-md shadow-sm focus:outline-none focus:ring-blue-300 focus:border-blue-500 text-black`} // Added text-black here
         />
       </div>
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}

@@ -1,8 +1,8 @@
 'use client';
 
 import CourseForm from '@/app/components/form/course/CourseForm';
-import useCourses from '../../hooks/useCourses';
-import Sidebar from '@/app/components/SideBar';
+import useCourses from '../../../hooks/useCourses';
+import Sidebar from '@/app/components/sidebar/SideBar';
 import { useRouter } from 'next/navigation';
 
 export default function CreateCoursesPage() {
