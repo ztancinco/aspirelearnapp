@@ -54,9 +54,9 @@ ul {
 
 /* Focus styles */
 :focus {
-  outline: 3px solid #14b8a6;
+  outline: 1px solid #14b8a6;
   /* Teal for accessibility */
-  outline-offset: 4px;
+  outline-offset: 1px;
 }
 
 /* Button styles */
@@ -72,9 +72,9 @@ button:hover {
 }
 
 button:focus {
-  outline: 3px solid #10b981;
+  outline: 1px solid #10b981;
   /* Green for focus */
-  outline-offset: 4px;
+  outline-offset: 1px;
 }
 
 /* Loader animation */
@@ -131,7 +131,7 @@ p {
   border-radius: 8px;
 }
 
-/* Example for NProgress customization */
+/* NProgress*/
 #nprogress .bar {
   background: #14b8a6;
   /* Teal for progress bar */

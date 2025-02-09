@@ -8,7 +8,7 @@ import {
   BookOpenIcon,
   UserIcon,
   UserGroupIcon,
-  VideoCameraIcon,
+  // VideoCameraIcon,
 } from '@heroicons/react/24/outline';
 
 const Sidebar: React.FC = () => {
@@ -45,13 +45,13 @@ const Sidebar: React.FC = () => {
           <BookOpenIcon className="h-5 w-5" />
           <span className="ml-3 hidden sm:block">Courses</span>
         </Link>
-        <Link
+        {/* <Link
           href="/quizzes"
           className="flex items-center px-2 py-2 text-gray-300 hover:bg-teal-800 hover:text-white rounded-md"
         >
           <VideoCameraIcon className="h-5 w-5" />
           <span className="ml-3 hidden sm:block">Quizzes</span>
-        </Link>
+        </Link> */}
           <Link
           href="/users"
           className="flex items-center px-2 py-2 text-gray-300 hover:bg-teal-800 hover:text-white rounded-md"

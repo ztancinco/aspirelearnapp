@@ -1,18 +1,65 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Course } from '@/app/api/interface/Course';
-import CoursesListRow from './ListRow';
-import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import CustomDataTable from '@/app/components/CustomDataTable';
+import { PlusCircleIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+
 import { useRouter } from 'next/navigation';
 import useCourses from '@/app/hooks/useCourses';
 
 interface CourseListProps {
   courses: Course[];
+  onFetchCourses: () => void; 
 }
 
-export default function List({ courses = [] }: CourseListProps) {
+export default function List({ courses = [], onFetchCourses }: CourseListProps) {
   const router = useRouter();
   const { deleteCourse } = useCourses();
+
+  const columns = useMemo(
+    () => [
+      { key: 'title', label: 'Course Title' },
+      { key: 'instructor', label: 'Instructor' },
+      { key: 'lessons', label: 'Lessons' },
+      { key: 'quizzes', label: 'quizzes' },
+    ],
+    []
+  )
+
+  const handleEditClick = (courseId: number) => {
+    router.push(`/admin/courses/edit/${courseId}`);
+  }
+
+  const handleDeleteClick = async (courseId: number) => {
+    if (courseId === undefined || isNaN(Number(courseId))) return;
+    if (confirm(`Are you sure you want to delete the course?`)) {
+      try {
+        await deleteCourse(courseId);
+        onFetchCourses();
+      } catch (err) {
+        console.error('Failed to delete course:', err);
+        alert('Failed to delete course. Please try again.');
+      }
+    }
+  }
+
+  const formatInstructorFullName = (course: Course) => {
+    const instructor = course.instructor;
+    if (!instructor || typeof instructor === 'string') {
+      return null;
+    }
+
+    return `${instructor.first_name}, ${instructor.last_name}`;
+  }
+
+  const coursesRecord = courses.map((course: Course) => ({
+    id: course.id,
+    title: course.title,
+    instructor: formatInstructorFullName(course),
+    lessons: Array.isArray(course.lessons) ? course.lessons.length : 0,
+    quizzes: Array.isArray(course.quizzes) ? course.quizzes.length : 0,
+  }))
 
   return (
     <section className="mt-8 bg-white p-6 rounded-lg shadow">
@@ -26,50 +73,20 @@ export default function List({ courses = [] }: CourseListProps) {
         </button>
       </div>
       <div className="mt-6 overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Course Title
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Instructor
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3 text-right">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {Array.isArray(courses) && courses.length > 0 ? (
-              courses.map((course) => (
-                <CoursesListRow
-                  key={course.id || course.title}
-                  course={course}
-                  onDelete={deleteCourse}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="text-center py-4">
-                  No course(s) available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <CustomDataTable
+          data={coursesRecord}
+          columns={columns}
+          actions={(row) => (
+          <div className="flex space-x-2">
+            <button onClick={() => row.id && handleEditClick(row.id)} className="text-blue-500 hover:text-blue-700">
+              <PencilIcon className="h-5 w-5" />
+            </button>
+            <button onClick={() => row.id && handleDeleteClick(row.id)} className="text-red-500 hover:text-red-700">
+              <TrashIcon className="h-5 w-5" />
+            </button>
+          </div>
+        )}
+        />
       </div>
     </section>
   );

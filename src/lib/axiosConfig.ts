@@ -28,12 +28,17 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor to handle token expiration
+// Response Interceptor to handle token expiration and forbidden errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      console.log('Unauthorized, please login again');
+    if (axios.isAxiosError(error)) {
+       if (error.response?.status === 401 || error.response?.status === 403) {
+        // Remove authentication data from cookies
+        Cookies.remove('authData');
+        Cookies.remove('userData');
+        window.location.href = '/auth/login';
+      }
     }
     return Promise.reject(error);
   }

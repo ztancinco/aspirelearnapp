@@ -8,9 +8,9 @@ import { useRouter } from 'next/navigation';
 import {
   HomeIcon,
   BookOpenIcon,
-  UserIcon,
+  // UserIcon,
   UserGroupIcon,
-  VideoCameraIcon,
+  // VideoCameraIcon,
   PowerIcon,
 } from '@heroicons/react/24/outline';
 import useAuth from '@/app/hooks/useAuth';
@@ -64,13 +64,13 @@ import useAuth from '@/app/hooks/useAuth';
           <BookOpenIcon className="h-5 w-5" />
           <span className="ml-3 hidden sm:block">Courses</span>
         </Link>
-        <Link
+        {/* <Link
           href="/admin/quizzes"
           className="flex items-center px-2 py-2 text-gray-300 hover:bg-teal-800 hover:text-white rounded-md"
         >
           <VideoCameraIcon className="h-5 w-5" />
           <span className="ml-3 hidden sm:block">Quizzes</span>
-        </Link>
+        </Link> */}
         <Link
           href="/admin/users"
           className="flex items-center px-2 py-2 text-gray-300 hover:bg-teal-800 hover:text-white rounded-md"
@@ -78,22 +78,23 @@ import useAuth from '@/app/hooks/useAuth';
           <UserGroupIcon className="h-5 w-5" />
           <span className="ml-3 hidden sm:block">Users</span>
         </Link>
-        <Link
+        {/* <Link
           href="#"
           className="flex items-center px-2 py-2 text-gray-300 hover:bg-teal-800 hover:text-white rounded-md"
         >
           <UserIcon className="h-5 w-5" />
           <span className="ml-3 hidden sm:block">Profile</span>
-        </Link>
+        </Link> */}
 
-        {/* Logout Button */}
-        <button
+        {/* Logout */}
+        <Link
+          href="#"
           onClick={handleLogout}
-          className="flex items-center px-2 py-2 text-gray-300 hover:bg-teal-800 hover:text-white rounded-md mt-auto"
+          className="flex items-center px-2 py-2 text-gray-300 hover:bg-teal-800 hover:text-white rounded-md"
         >
           <PowerIcon className="h-5 w-5" />
           <span className="ml-3 hidden sm:block">Logout</span>
-        </button>
+        </Link>
       </nav>
     </div>
   );

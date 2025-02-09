@@ -9,4 +9,5 @@ export interface User {
   roles?: string[];
   role?: string;
   password?: string;
+  status?: string;
 }

@@ -1,19 +1,23 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import CourseRepository from '@/app/api/repositories/CourseRepository';
 import { Course } from '@/app/api/interface/Course';
+import useUsers from '@/app/hooks/useUsers';
+import { User } from '@/app/api/interface/User';
+import { CourseFormData } from '@/app/components/form/course/interface/course_form_data';
 
 export default function useCourses() {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [instructors, setInstructors] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Helper to handle errors
+  const { fetchUsers } = useUsers();
+
   const handleError = (message: string, error: unknown) => {
     setError(message);
     console.error(message, error);
   };
 
-  // Fetch all courses
   const fetchCourses = useCallback(async () => {
     setLoading(true);
     try {
@@ -26,7 +30,6 @@ export default function useCourses() {
     }
   }, []);
 
-  // Fetch a single course by ID
   const fetchCourse = useCallback(
     async (id: number): Promise<Course | null> => {
       const cachedCourse = courses.find((course) => course.id === id);
@@ -45,9 +48,8 @@ export default function useCourses() {
     [courses]
   );
 
-  // Add a new course
   const addCourse = useCallback(
-    async (courseData: Omit<Course, 'id'>) => {
+    async (courseData: Omit<CourseFormData, 'id'>) => {
       setLoading(true);
       try {
         const newCourse = await CourseRepository.createCourse(courseData);
@@ -61,7 +63,6 @@ export default function useCourses() {
     []
   );
 
-  // Update an existing course
   const updateCourse = useCallback(
     async (id: number, updatedCourseData: Partial<Course>) => {
       setLoading(true);
@@ -81,7 +82,6 @@ export default function useCourses() {
     [courses]
   );
 
-  // Delete a course
   const deleteCourse = useCallback(
     async (id: number) => {
       setLoading(true);
@@ -97,12 +97,31 @@ export default function useCourses() {
     [setCourses]
   );
 
+  const fetchInstructors = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchUsers();
+      const filteredInstructors: User[] = data.filter((user: User) => user.role?.toLocaleUpperCase() === 'INSTRUCTOR');
+      setInstructors(filteredInstructors);
+    } catch (err) {
+      handleError('Failed to fetch instructors', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchUsers]);
+
+  const getCourses = useMemo(() => courses, [courses]);
+  const getInstructors = useMemo(() => instructors, [instructors]);
+
   return {
     courses,
     loading,
     error,
     fetchCourses,
     fetchCourse,
+    fetchInstructors,
+    getCourses,
+    getInstructors,
     addCourse,
     updateCourse,
     deleteCourse,

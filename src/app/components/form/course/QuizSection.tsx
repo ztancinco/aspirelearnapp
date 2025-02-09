@@ -19,8 +19,6 @@ const QuizSection: React.FC<QuizSectionProps> = ({
 
   return (
     <div className="mt-8">
-      <h3 className="text-xl font-semibold text-gray-800 mb-4">Quizzes</h3>
-
       {quizzes.map((quiz, quizIndex) => (
         <div
           key={quizIndex}
@@ -38,10 +36,10 @@ const QuizSection: React.FC<QuizSectionProps> = ({
           <Controller
             name={`quizzes.${quizIndex}.title`}
             control={control}
-            rules={{ required: 'Quiz title is required' }}
+            rules={{ required: 'Title is required' }}
             render={({ field, fieldState }) => (
               <div>
-                <InputField {...field} placeHolder="Quiz Title" />
+                <InputField {...field} placeHolder="Title" />
                 {fieldState?.error && (
                   <p className="text-red-600">{fieldState?.error?.message}</p>
                 )}
@@ -74,10 +72,10 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                   <Controller
                     name={`quizzes.${quizIndex}.questions.${questionIndex}.title`}
                     control={control}
-                    rules={{ required: 'Question title is required' }}
+                    rules={{ required: 'Title is required' }}
                     render={({ field, fieldState }) => (
                       <div>
-                        <InputField {...field} placeHolder="Question Title" />
+                        <InputField {...field} placeHolder="Question" />
                         {fieldState?.error && (
                           <p className="text-red-600">{fieldState?.error?.message}</p>
                         )}
@@ -89,14 +87,14 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                     <label className="flex items-center text-sm font-medium text-gray-700">
                       <input
                         type="checkbox"
-                        checked={question.isMultipleChoice}
+                        checked={question.is_muliple_choice}
                         onChange={(e) =>
                           onChange(
                             quizIndex,
                             'questions',
                             quiz.questions.map((q, i) =>
                               i === questionIndex
-                                ? { ...q, isMultipleChoice: e.target.checked }
+                                ? { ...q, is_muliple_choice: e.target.checked }
                                 : q
                             )
                           )
@@ -107,7 +105,7 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                     </label>
                   </div>
 
-                  {question.isMultipleChoice && (
+                  {question.is_muliple_choice && (
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700">Options</label>
                       {question.options.map((option, optionIndex) => (
@@ -130,9 +128,9 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                   )}
 
                   <div className="mb-4">
-                    {question.isMultipleChoice ? (
+                    {question.is_muliple_choice ? (
                       <Controller
-                        name={`quizzes.${quizIndex}.questions.${questionIndex}.correctAnswer`}
+                        name={`quizzes.${quizIndex}.questions.${questionIndex}.correct_answer`}
                         control={control}
                         render={({ field }) => (
                           <SelectField
@@ -145,7 +143,7 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                       />
                     ) : (
                       <Controller
-                        name={`quizzes.${quizIndex}.questions.${questionIndex}.correctAnswer`}
+                        name={`quizzes.${quizIndex}.questions.${questionIndex}.correct_answer`}
                         control={control}
                         rules={{ required: 'Correct answer is required' }}
                         render={({ field, fieldState }) => (

@@ -1,5 +1,6 @@
 import Repository from '@/app/api/repositories/Repository';
 import { Course } from '@/app/api/interface/Course';
+import { CourseFormData } from '@/app/components/form/course/interface/course_form_data';
 
 export default class CourseRepository extends Repository {
   private static readonly prefix = '/courses';
@@ -26,8 +27,8 @@ export default class CourseRepository extends Repository {
    * @param courseData The data for the new course.
    * @returns The created course.
    */
-  public static async createCourse(courseData: Omit<Course, "id">): Promise<Course> {
-    const { data } = await this.resource.post<Course>(`${this.prefix}/`, courseData);
+  public static async createCourse(courseData: CourseFormData): Promise<Course> {
+    const { data } = await this.resource.post<CourseFormData>(`${this.prefix}/`, courseData);
     return data;
   }
 

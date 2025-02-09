@@ -15,7 +15,7 @@ interface UserFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  role: 'Admin' | 'User' | 'Instructor' | 'Student';
+  role: 'Admin' | 'Instructor' | 'Student';
   is_active?: boolean;
   date_joined?: string;
 }
@@ -35,7 +35,7 @@ const UserForm: React.FC = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      role: 'User',
+      role: 'Instructor',
     },
   });
 
@@ -64,8 +64,8 @@ const UserForm: React.FC = () => {
         date_joined: new Date().toISOString(),
       });
 
-      reset(); // Reset the form fields
-      router.push('/admin/users'); // Redirect to users page
+      reset();
+      router.push('/admin/users');
     } catch (error) {
       console.error('Error creating user:', error);
     } finally {
@@ -76,7 +76,7 @@ const UserForm: React.FC = () => {
   return (
     <DashLearnLayout>
       <div className="flex items-center justify-center bg-gray-100">
-        <div className="max-w-7xl w-full p-8 bg-white shadow-xl rounded-lg">
+        <div className="w-full p-8 bg-white shadow-xl rounded-lg">
           <h2 className="text-3xl font-semibold text-gray-800 mb-6">Add New User</h2>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -156,7 +156,7 @@ const UserForm: React.FC = () => {
                   {...field}
                   value={field.value}
                   onChange={(value) => field.onChange(value)}
-                  options={['User', 'Instructor', 'Student', 'Admin']}
+                  options={['Instructor', 'Student', 'Admin']}
                   error={errors.role?.message}
                   placeholder="Select Role"
                 />

@@ -22,7 +22,6 @@ const LessonSection: React.FC<LessonSectionProps> = ({
 
   return (
     <div className="mt-8">
-      <h3 className="text-xl font-semibold text-gray-800 mb-4">Lessons</h3>
       {lessons.map((lesson, index) => (
         <div 
           key={index} 
@@ -40,12 +39,12 @@ const LessonSection: React.FC<LessonSectionProps> = ({
           <Controller
             name={`lessons.${index}.title`}
             control={control}
-            rules={{ required: 'Lesson title is required' }}
+            rules={{ required: 'Title is required' }}
             render={({ field, fieldState }) => (
               <div>
                 <InputField
                   {...field}
-                  placeHolder="Lesson Title"
+                  placeHolder="Title"
                   onChange={(e) => onLessonChange(index, 'title', e.target.value)}
                 />
                 {fieldState?.error && (
@@ -58,12 +57,18 @@ const LessonSection: React.FC<LessonSectionProps> = ({
           <Controller
             name={`lessons.${index}.content`}
             control={control}
-            render={({ field }) => (
-              <InputField
-                {...field}
-                placeHolder="Lesson Content"
-                onChange={(e) => onLessonChange(index, 'content', e.target.value)}
-              />
+            rules={{ required: 'Content is required' }}
+            render={({ field, fieldState }) => (
+              <div>
+                <InputField
+                  {...field}
+                  placeHolder="Content"
+                  onChange={(e) => onLessonChange(index, 'content', e.target.value)}
+                />
+                {fieldState?.error && (
+                  <p className="text-red-600">{fieldState.error.message}</p>
+                )}
+              </div>
             )}
           />
 

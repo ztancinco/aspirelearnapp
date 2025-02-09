@@ -27,8 +27,10 @@ export default function useUsers() {
     try {
       const data = await UserRepository.getUsers();
       setUsers(data);
+      return data;
     } catch (err: unknown) {
       handleError('Failed to fetch users', err);
+      return [];
     } finally {
       setLoadingState(false);
     }

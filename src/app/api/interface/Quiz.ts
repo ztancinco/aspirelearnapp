@@ -3,7 +3,7 @@ export interface Quiz {
   questions: {
     title: string;
     options: string[];
-    correctAnswer: number | string;
-    isMultipleChoice: boolean;
+    correct_answer: number | string;
+    is_muliple_choice: boolean;
   }[];
 }

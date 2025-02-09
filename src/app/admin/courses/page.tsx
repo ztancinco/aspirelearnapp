@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Loader from '../../components/Loader';
 import HeaderList from '../../components/HeaderList';
-import QuizzesList from './partial/List';
+import CoursesList from './partial/List';
 import useCourses from '../../hooks/useCourses';
 import DashLearnLayout from '../../components/DashLearnLayout';
 
@@ -26,7 +26,7 @@ export default function Courses() {
             title="Manage Courses" 
             description="View, edit, and manage all the courses in the LMS."
           />
-          <QuizzesList courses={courses} />
+          <CoursesList courses={courses} onFetchCourses={fetchCourses} />
         </div>
        </DashLearnLayout>
     </>

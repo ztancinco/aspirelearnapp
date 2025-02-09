@@ -85,8 +85,8 @@ const useCourseFormHandlers = () => {
     quizzes[quizIndex]?.questions.push({
       title: '',
       options: ['', '', '', ''],
-      correctAnswer: '',
-      isMultipleChoice: false,
+      correct_answer: '',
+      is_muliple_choice: false,
     });
     setValue('quizzes', quizzes);
   };

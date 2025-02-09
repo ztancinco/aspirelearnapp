@@ -9,6 +9,7 @@ interface InputFieldProps {
   placeHolder?: string;
   error?: string;
   icon?: React.ReactNode;
+  className?: string; // Added className prop
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -20,6 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
   type = "text",
   error,
   icon,
+  className = "", // Default className to an empty string
 }) => {
   const inputId = `input-${label.replace(/\s+/g, "-").toLowerCase()}`;
 
@@ -43,11 +45,11 @@ const InputField: React.FC<InputFieldProps> = ({
           onChange={onChange}
           onBlur={onBlur}
           placeholder={placeHolder}
-          className={`text-sm block w-full ${
+          className={`text-lg block w-full ${
             icon ? "pl-10" : "pl-4"
           } pr-4 py-2 border ${
             error ? "border-red-500" : "border-gray-300"
-          } rounded-md shadow-sm focus:outline-none focus:ring-blue-300 focus:border-blue-500 text-black`} // Added text-black here
+          } rounded-md shadow-sm focus:outline-none focus:ring-blue-300 focus:border-teal-500 text-black ${className}`} // Added className here
         />
       </div>
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}

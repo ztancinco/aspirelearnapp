@@ -25,7 +25,7 @@ export default function useAuth() {
 
   const login = async (email: string, password: string) => {
     try {
-      const loginPostData: AuthLoginPostData = { email, password };
+      const loginPostData: AuthLoginPostData = { email, password: btoa(password) };
       const data = await AuthenticationRepository.authLogin(loginPostData);
 
       const { access_token, refresh_token, user } = data;
