@@ -30,7 +30,7 @@ export default function ManageUsers() {
             title="Manage Users" 
             description="View, edit, and manage all the users in the LMS."
           />
-          <List users={users} />
+          <List users={users} onFetchUsers={fetchUsers} />
         </div>
        </DashLearnLayout>
     </>
