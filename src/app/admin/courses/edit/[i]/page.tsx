@@ -6,7 +6,7 @@ import CourseForm from '@/app/components/form/course/CourseForm';
 import useCourses from '@/app/hooks/useCourses';
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Course } from '@/app/api/interface/Course';
+import { ICourse } from '@/app/api/interface/ICourse';
 
 export default function EditCoursePage() {
   const params = useParams();
@@ -14,7 +14,7 @@ export default function EditCoursePage() {
   
   const courseId = params.i ? parseInt(params.i as string, 10) : NaN;
   const { fetchCourse, loading, error } = useCourses();
-  const [course, setCourse] = useState<Course | null>(null);
+  const [course, setCourse] = useState<ICourse | null>(null);
 
   useEffect(() => {
     if (isNaN(courseId)) {

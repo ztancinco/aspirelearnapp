@@ -2,19 +2,19 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { PlusCircleIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { MinusCircleIcon } from '@heroicons/react/24/outline';
-import { CourseFormData } from '@/app/components/form/course/interface/course_form_data';
-import { QuizSectionProps } from '@/app/components/form/course/interface/quiz_section_prop';
+import { ICourseFormData } from '@/app/api/interface/form/ICourseFormData';
+import { IQuizSectionProps } from '@/app/api/interface/form/IQuizSectionProps';
 import InputField from '@/app/components/input/InputField';
 import SelectField from '@/app/components/input/SelectField'
 
-const QuizSection: React.FC<QuizSectionProps> = ({
+const QuizSection: React.FC<IQuizSectionProps> = ({
   onChange,
   onDelete,
   onAddQuiz,
   onAddQuestion,
   onDeleteQuestion,
 }) => {
-  const { control, watch } = useFormContext<CourseFormData>();
+  const { control, watch } = useFormContext<ICourseFormData>();
   const quizzes = watch('quizzes') || [];
 
   return (
@@ -73,9 +73,10 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                     name={`quizzes.${quizIndex}.questions.${questionIndex}.title`}
                     control={control}
                     rules={{ required: 'Title is required' }}
+                    defaultValue={ question.text ?? ''}
                     render={({ field, fieldState }) => (
                       <div>
-                        <InputField {...field} placeHolder="Question" />
+                        <InputField {...field} placeHolder="Question"/>
                         {fieldState?.error && (
                           <p className="text-red-600">{fieldState?.error?.message}</p>
                         )}
@@ -87,14 +88,14 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                     <label className="flex items-center text-sm font-medium text-gray-700">
                       <input
                         type="checkbox"
-                        checked={question.is_muliple_choice}
+                        checked={question.is_multiple_choice}
                         onChange={(e) =>
                           onChange(
                             quizIndex,
                             'questions',
                             quiz.questions.map((q, i) =>
                               i === questionIndex
-                                ? { ...q, is_muliple_choice: e.target.checked }
+                                ? { ...q, is_multiple_choice: e.target.checked }
                                 : q
                             )
                           )
@@ -104,19 +105,24 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                       Is multiple choice
                     </label>
                   </div>
-
-                  {question.is_muliple_choice && (
+                  {
+                    question.is_multiple_choice && (
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700">Options</label>
-                      {question.options.map((option, optionIndex) => (
+                      {
+                        question.answers.map((option, optionIndex) => (
                         <Controller
                           key={optionIndex}
-                          name={`quizzes.${quizIndex}.questions.${questionIndex}.options.${optionIndex}`}
+                          name={`quizzes.${quizIndex}.questions.${questionIndex}.answers.${optionIndex}.text`}
                           control={control}
                           rules={{ required: `Option ${optionIndex + 1} is required` }}
                           render={({ field, fieldState }) => (
                             <div>
-                              <InputField {...field} placeHolder={`Option ${optionIndex + 1}`} />
+                              <InputField
+                                {...field}
+                                placeHolder={`Option ${optionIndex + 1}`}
+                                value={String(field.value ?? '')}
+                              />
                               {fieldState?.error && (
                                 <p className="text-red-600">{fieldState?.error?.message}</p>
                               )}
@@ -128,7 +134,7 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                   )}
 
                   <div className="mb-4">
-                    {question.is_muliple_choice ? (
+                    {question.is_multiple_choice ? (
                       <Controller
                         name={`quizzes.${quizIndex}.questions.${questionIndex}.correct_answer`}
                         control={control}
@@ -136,25 +142,26 @@ const QuizSection: React.FC<QuizSectionProps> = ({
                           <SelectField
                             value={`Option ${Number(field.value) + 1}`}
                             onChange={(value) => field.onChange(Number(value.split(' ')[1]) - 1)}
-                            options={question.options.map((_, optionIndex) => `Option ${optionIndex + 1}`)}
+                            options={question.answers.map((_, optionIndex) => `Option ${optionIndex + 1}`)}
                             placeholder="Select the correct answer"
                           />
                         )}
                       />
                     ) : (
-                      <Controller
-                        name={`quizzes.${quizIndex}.questions.${questionIndex}.correct_answer`}
-                        control={control}
-                        rules={{ required: 'Correct answer is required' }}
-                        render={({ field, fieldState }) => (
-                          <div>
-                            <InputField {...field} placeHolder="Correct Answer" />
-                            {fieldState?.error && (
-                              <p className="text-red-600">{fieldState?.error?.message}</p>
-                            )}
-                          </div>
-                        )}
-                      />
+                    <Controller
+                      name={`quizzes.${quizIndex}.questions.${questionIndex}.correct_answer`}
+                      control={control}
+                      defaultValue={question.answers && question.answers.length > 0 ? question.answers.find(a => a.is_correct)?.text : '' }
+                      rules={{ required: 'Correct answer is required' }}
+                      render={({ field, fieldState }) => (
+                        <div>
+                          <InputField {...field} placeHolder="Correct Answer" />
+                          {fieldState?.error && (
+                            <p className="text-red-600">{fieldState?.error?.message}</p>
+                          )}
+                        </div>
+                      )}
+                    />
                     )}
                   </div>
                 </div>

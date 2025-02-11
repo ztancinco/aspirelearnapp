@@ -1,22 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
-import Loader from '../../components/Loader';
-import HeaderList from '../../components/HeaderList';
-import CoursesList from './partial/List';
-import useCourses from '../../hooks/useCourses';
-import DashLearnLayout from '../../components/DashLearnLayout';
+import HeaderList from '@/app/components/HeaderList';
+import CoursesList from '@/app/admin/courses/partial/List';
+import useCourses from '@/app/hooks/useCourses'
+import DashLearnLayout from '@/app/components/DashLearnLayout';
 
 export default function Courses() {
-  const { courses, loading, fetchCourses } = useCourses();
+  const { courses, fetchCourses } = useCourses();
 
   useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
-
-  if (loading) {
-    return <Loader />;
-  }
 
   return (
     <>

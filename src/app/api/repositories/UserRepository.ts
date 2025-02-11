@@ -1,5 +1,5 @@
 import Repository from '@/app/api/repositories/Repository';
-import { User } from '@/app/api/interface/User';
+import { IUser } from '../interface/IUser';
 
 export default class UserRepository extends Repository {
   private static readonly prefix = '/users';
@@ -8,8 +8,8 @@ export default class UserRepository extends Repository {
    * Fetches all users.
    * @returns A list of users.
    */
-  public static async getUsers(): Promise<User[]> {
-    return await this.resource.get<User[]>(`${this.prefix}/`);
+  public static async getUsers(): Promise<IUser[]> {
+    return await this.resource.get<IUser[]>(`${this.prefix}/`);
   }
 
   /**
@@ -17,8 +17,8 @@ export default class UserRepository extends Repository {
    * @param id 
    * @returns The requested user or null if not found.
    */
-  public static async getUser(id: number): Promise<User | null> {
-    const { data } = await this.resource.get<{ data: User }>(`${this.prefix}/${id}`);
+  public static async getUser(id: number): Promise<IUser | null> {
+    const { data } = await this.resource.get<{ data: IUser }>(`${this.prefix}/${id}`);
     return data;
   }
 
@@ -27,8 +27,8 @@ export default class UserRepository extends Repository {
    * @param userData
    * @returns The created user.
    */
-  public static async createUser(userData: User): Promise<User> {
-    const { data } = await this.resource.post<User>(`${this.prefix}/`, userData);
+  public static async createUser(userData: IUser): Promise<IUser> {
+    const { data } = await this.resource.post<IUser>(`${this.prefix}/`, userData);
     return data;
   }
 
@@ -39,10 +39,10 @@ export default class UserRepository extends Repository {
    * @returns The updated user.
    * @throws An error if the user is not found.
    */
-  public static async updateUser(id: number, updatedUserData: Partial<User>): Promise<User> {
+  public static async updateUser(id: number, updatedUserData: Partial<IUser>): Promise<IUser> {
     const currentUser = await this.getUser(id);
     if (!currentUser) throw new Error('User not found');
-    const { data } = await this.resource.put<User>(`${this.prefix}/?user_id=${id}`, { ...currentUser, ...updatedUserData });
+    const { data } = await this.resource.put<IUser>(`${this.prefix}/?user_id=${id}`, { ...currentUser, ...updatedUserData });
     return data;
   }
 

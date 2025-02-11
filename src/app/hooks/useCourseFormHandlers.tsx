@@ -1,12 +1,11 @@
 import { useFormContext } from 'react-hook-form';
-import { Quiz } from '@/app/api/interface/Quiz';
-import { Lesson } from '../api/interface/Lesson';
+import { IQuiz } from '@/app/api/interface/IQuiz';
+import { ILesson } from '@/app/api/interface/ILesson';
 
 const useCourseFormHandlers = () => {
   const context = useFormContext();
 
   if (!context) {
-    console.error('useCourseFormHandlers must be used within a FormProvider');
     throw new Error('useCourseFormHandlers must be used within a FormProvider');
   }
 
@@ -15,8 +14,8 @@ const useCourseFormHandlers = () => {
   // Lesson Handlers
   const handleLessonChange = (
     index: number,
-    field: keyof Lesson,
-    value: Lesson[keyof Lesson]
+    field: keyof ILesson,
+    value: ILesson[keyof ILesson]
   ) => {
     const lessons = watch('lessons') || [];
     lessons[index] = { ...lessons[index], [field]: value };
@@ -43,8 +42,8 @@ const useCourseFormHandlers = () => {
   // Quiz Handlers
   const handleQuizChange = (
     quizIndex: number,
-    field: keyof Quiz,
-    value: Quiz[keyof Quiz]
+    field: keyof IQuiz,
+    value: IQuiz[keyof IQuiz]
   ) => {
     const quizzes = watch('quizzes') || [];
     quizzes[quizIndex] = { ...quizzes[quizIndex], [field]: value };
@@ -52,9 +51,7 @@ const useCourseFormHandlers = () => {
   };
 
   const handleAddQuiz = () => {
-    console.log('adding quiz');
     const quizzes = watch('quizzes') || [];
-    console.log(quizzes);
     quizzes.push({ title: '', questions: [] });
     setValue('quizzes', quizzes);
   };
@@ -66,11 +63,11 @@ const useCourseFormHandlers = () => {
   };
 
   // Question Handlers
-  const handleQuestionChange = <T extends keyof Quiz['questions'][0]>(
+  const handleQuestionChange = <T extends keyof IQuiz['questions'][0]>(
     quizIndex: number,
     questionIndex: number,
     field: T,
-    value: Quiz['questions'][0][T]
+    value: IQuiz['questions'][0][T]
   ) => {
     const quizzes = watch('quizzes') || [];
     const question = quizzes[quizIndex]?.questions[questionIndex];
@@ -84,9 +81,9 @@ const useCourseFormHandlers = () => {
     const quizzes = watch('quizzes') || [];
     quizzes[quizIndex]?.questions.push({
       title: '',
-      options: ['', '', '', ''],
+      answers: ['', '', '', ''],
       correct_answer: '',
-      is_muliple_choice: false,
+      is_multiple_choice: false,
     });
     setValue('quizzes', quizzes);
   };

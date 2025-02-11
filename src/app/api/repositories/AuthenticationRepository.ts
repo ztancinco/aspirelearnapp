@@ -1,10 +1,10 @@
 import Repository from '@/app/api/repositories/Repository';
-import { User } from '@/app/api/interface/User';
+import { IUser } from '../interface/IUser';
 
 export interface AuthData {
   access_token: string;
   refresh_token: string;
-  user: User;
+  user: IUser;
 }
 
 export interface AuthLoginPostData {

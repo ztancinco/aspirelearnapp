@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import Cookies from 'js-cookie';
 import AuthenticationRepository from '@/app/api/repositories/AuthenticationRepository';
 import { AuthData, AuthLoginPostData } from '@/app/api/repositories/AuthenticationRepository';
-import { User } from '@/app/api/interface/User';
+import { IUser } from '@/app/api/interface/IUser';
 
 export default function useAuth() {
   const [authData, setAuthData] = useState<AuthData | null>(() => {
@@ -10,7 +10,7 @@ export default function useAuth() {
     return savedAuthData && savedAuthData !== 'undefined' ? JSON.parse(savedAuthData) : null;
   });
 
-  const [user, setUser] = useState<User | null>(() => {
+  const [user, setUser] = useState<IUser | null>(() => {
     const savedUser = Cookies.get('userData');
     return savedUser && savedUser !== 'undefined' ? JSON.parse(savedUser) : null;
   });

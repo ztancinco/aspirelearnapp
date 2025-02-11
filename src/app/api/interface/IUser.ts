@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
   username: string;
   first_name: string;
   last_name: string;
@@ -9,5 +9,4 @@ export interface User {
   roles?: string[];
   role?: string;
   password?: string;
-  status?: string;
 }

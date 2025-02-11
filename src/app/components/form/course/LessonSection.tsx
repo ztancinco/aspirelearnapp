@@ -2,14 +2,14 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { PlusCircleIcon, TrashIcon } from '@heroicons/react/24/solid';
 import InputField from '@/app/components/input/InputField';
-import { Lesson } from '@/app/api/interface/Lesson';
-import { CourseFormData } from './interface/course_form_data';
+import { ICourseFormData } from '@/app/api/interface/form/ICourseFormData';
+import { ILesson } from '@/app/api/interface/ILesson';
 
 interface LessonSectionProps {
-  lessons: Lesson[];
+  lessons: ILesson[];
   onAddLesson: () => void;
   onDeleteLesson: (index: number) => void;
-  onLessonChange: (index: number, field: keyof Lesson, value: Lesson[keyof Lesson]) => void;
+  onLessonChange: (index: number, field: keyof ILesson, value: ILesson[keyof ILesson]) => void;
 }
 
 const LessonSection: React.FC<LessonSectionProps> = ({
@@ -17,12 +17,12 @@ const LessonSection: React.FC<LessonSectionProps> = ({
   onDeleteLesson,
   onLessonChange
 }) => {
-  const { control, watch } = useFormContext<CourseFormData>();
+  const { control, watch } = useFormContext<ICourseFormData>();
   const lessons = watch('lessons') || [];
 
   return (
     <div className="mt-8">
-      {lessons.map((lesson, index) => (
+      {lessons.map((lesson: ILesson, index) => (
         <div 
           key={index} 
           className="mb-4 p-6 bg-gradient-to-r from-teal-100 to-blue-200 rounded-lg shadow-lg relative"

@@ -9,16 +9,17 @@ interface Option {
 }
 
 interface CustomDropdownProps {
-  options: Option[];
-  placeholder?: string;
-  onSelect: (selectedId: string | number) => void;
+  options: Option[];  // Ensure the `options` type is correctly defined
+  placeholder: string;
+  value: string | number;  // Add the `value` prop to manage the selected value
+  onSelect: (selectedId: string | number) => void;  // Handle selection
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, placeholder = 'Select an option', onSelect }) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, placeholder = 'Select an option', value, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);  // Store selected option
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Filter options based on search input
@@ -29,6 +30,12 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, placeholder = 
       )
     );
   }, [searchTerm, options]);
+
+  // Update selected option when `value` prop changes
+  useEffect(() => {
+    const selected = options.find((option) => option.id === value);
+    setSelectedOption(selected || null);
+  }, [value, options]);
 
   // Handle click outside dropdown to close it
   useEffect(() => {
@@ -46,7 +53,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, placeholder = 
   // Handle selection of an option
   const handleSelect = (option: Option) => {
     setSelectedOption(option);
-    onSelect(option.id); // Return only the ID
+    onSelect(option.id);  // Pass the selected id back to parent
     setIsOpen(false);
     setSearchTerm('');
   };

@@ -9,7 +9,7 @@ interface InputFieldProps {
   placeHolder?: string;
   error?: string;
   icon?: React.ReactNode;
-  className?: string; // Added className prop
+  className?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -21,7 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
   type = "text",
   error,
   icon,
-  className = "", // Default className to an empty string
+  className = "",
 }) => {
   const inputId = `input-${label.replace(/\s+/g, "-").toLowerCase()}`;
 

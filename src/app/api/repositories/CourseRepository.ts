@@ -1,6 +1,6 @@
 import Repository from '@/app/api/repositories/Repository';
-import { Course } from '@/app/api/interface/Course';
-import { CourseFormData } from '@/app/components/form/course/interface/course_form_data';
+import { ICourse } from '../interface/ICourse';
+import { ICourseFormData } from '../interface/form/ICourseFormData';
 
 export default class CourseRepository extends Repository {
   private static readonly prefix = '/courses';
@@ -9,8 +9,8 @@ export default class CourseRepository extends Repository {
    * Fetches all courses.
    * @returns A list of courses.
    */
-  public static async getCourses(): Promise<Course[]> {
-    return await this.resource.get<Course[]>(`${this.prefix}/`);
+  public static async getCourses(): Promise<ICourse[]> {
+    return await this.resource.get<ICourse[]>(`${this.prefix}/`);
   }
 
   /**
@@ -18,8 +18,8 @@ export default class CourseRepository extends Repository {
    * @param id The ID of the course to fetch.
    * @returns The requested course.
    */
-  public static async getCourse(id: number): Promise<Course> {
-    return await this.resource.get<Course>(`${this.prefix}/${id}`);
+  public static async getCourse(id: number): Promise<ICourse> {
+    return await this.resource.get<ICourse>(`${this.prefix}/${id}`);
   }
 
   /**
@@ -27,8 +27,8 @@ export default class CourseRepository extends Repository {
    * @param courseData The data for the new course.
    * @returns The created course.
    */
-  public static async createCourse(courseData: CourseFormData): Promise<Course> {
-    const { data } = await this.resource.post<CourseFormData>(`${this.prefix}/`, courseData);
+  public static async createCourse(courseData: ICourseFormData): Promise<ICourse> {
+    const { data } = await this.resource.post<ICourseFormData>(`${this.prefix}/`, courseData);
     return data;
   }
 
@@ -38,8 +38,8 @@ export default class CourseRepository extends Repository {
    * @param updatedCourseData The updated course data.
    * @returns The updated course.
    */
-  public static async updateCourse(id: number, updatedCourseData: Course): Promise<Course> {
-    const { data } = await this.resource.put<Course>(`${this.prefix}/${id}`, updatedCourseData);
+  public static async updateCourse(id: number, updatedCourseData: ICourse): Promise<ICourse> {
+    const { data } = await this.resource.put<ICourse>(`${this.prefix}/${id}/`, updatedCourseData);
     return data;
   }
 

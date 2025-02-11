@@ -1,9 +1,9 @@
 import { useState, useCallback, useMemo } from 'react';
 import UserRepository from '@/app/api/repositories/UserRepository';
-import { User } from '@/app/api/interface/User';
+import { IUser } from '@/app/api/interface/IUser';
 
 export default function useUsers() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +17,7 @@ export default function useUsers() {
   const setLoadingState = (loadingState: boolean) => {
     setLoading(loadingState);
     if (!loadingState) {
-      setError(null); // Clear error when loading ends
+      setError(null);
     }
   };
 
@@ -38,7 +38,7 @@ export default function useUsers() {
 
   // Fetch a single user by ID
   const fetchUser = useCallback(
-    async (id: number): Promise<User | null> => {
+    async (id: number): Promise<IUser | null> => {
       const cachedUser = users.find((user) => user.id === id);
       if (cachedUser) return cachedUser;
       setLoadingState(true);
@@ -56,12 +56,12 @@ export default function useUsers() {
 
   const getUsers = useMemo(() => users, [users]);
   const getUser = useMemo(
-    () => (id: number): User | null => users.find((user) => user.id === id) || null,
+    () => (id: number): IUser | null => users.find((user) => user.id === id) || null,
     [users]
   );
 
   // Add a new user
-  const addUser = async (userData: Omit<User, 'id'>) => {
+  const addUser = async (userData: Omit<IUser, 'id'>) => {
     setError(null);
     try {
       const newUser = await UserRepository.createUser(userData);
@@ -72,7 +72,7 @@ export default function useUsers() {
   };
 
   // Update an existing user
-  const updateUser = async (id: number, updatedUserData: Partial<User>) => {
+  const updateUser = async (id: number, updatedUserData: Partial<IUser>) => {
     setError(null);
     try {
       const updatedUser = await UserRepository.updateUser(id, updatedUserData);
@@ -89,7 +89,7 @@ export default function useUsers() {
     setError(null);
     try {
       await UserRepository.deleteUser(id);
-      await fetchUsers(); // Refresh the user list after deletion
+      await fetchUsers();
     } catch (err: unknown) {
       handleError('Failed to delete user', err);
     }
